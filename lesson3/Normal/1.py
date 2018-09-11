@@ -10,3 +10,27 @@
 #  если скажем эти файлы потом придется передавать.
 # Так же при выводе имя должно быть полностью в верхнем регистре!
 # Подумайте вспоминая урок, как это можно сделать максимально кратко, используя возможности языка Python.
+
+import os
+
+list1 = ('Иван', 'евгений', 'Максим', 'Елена', 'Владимир')
+list2 = (20000, 40000, 30000, 600000, 35000)
+
+result = zip(list1,list2)
+dict1 = dict(result)
+
+file = open('salary.txt', 'w', encoding='utf8')
+for key,elem in dict1.items():
+    if int(elem) > 500000:
+         continue
+    file.write(str.capitalize(key))
+    file.write('\x20-\x20')
+    file.write(str(elem))
+    file.write('\n')
+file.close()
+
+with open('salary.txt', 'r', encoding='utf8') as f:
+    for line in f:
+        a = line.rstrip()
+        tmp_list = a.split('\x20-\x20')
+        print(tmp_list[0], '-', int(int(tmp_list[1]) * 0.87))
