@@ -23,10 +23,7 @@ file = open('salary.txt', 'w', encoding='utf8')
 for key,elem in dict1.items():
     if int(elem) > 500000:
          continue
-    file.write(str.capitalize(key))
-    file.write('\x20-\x20')
-    file.write(str(elem))
-    file.write('\n')
+    file.write(str.capitalize(key) + '\x20-\x20' + str(elem) + '\n')
 file.close()
 
 with open('salary.txt', 'r', encoding='utf8') as f:
