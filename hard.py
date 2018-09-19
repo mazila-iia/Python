@@ -42,6 +42,8 @@ def copy_file():
         print('копия файла {} создана'.format(dir_name))
     except FileNotFoundError:
         print('файл {} не существует'.format(dir_name))
+    except OSError:
+        print('Синтаксическая ошибка в имени файла')
 
 
 def remove_file():
@@ -50,12 +52,16 @@ def remove_file():
         return
     file_path = os.path.join(os.getcwd(), dir_name)
     choice = input('Вы точно хотите удалить файл {}? (y/n)'.format(dir_name))
-    if choice == ('y' or 'Y'):
+    if choice == 'y' or choice == 'Y':
         try:
             os.remove(file_path)
             print('файл {} удален'.format(dir_name))
         except FileNotFoundError:
             print('файл {} не существует'.format(dir_name))
+        except PermissionError:
+            print('нет доступа к файлу {}'.format(dir_name))
+        except OSError:
+            print('Синтаксическая ошибка в имени файла, имени папки или метке тома')
     else:
         print('отмена удаления файла')
 
@@ -63,16 +69,30 @@ def change_dir():
     if not dir_name:
         print("Необходимо указать имя директории вторым параметром")
         return
+    # Проверка какой путь введен (относительный или абсолютный)
     pattern_dir = '^[a-zA-Z]:\\\\'
     search_pattern = re.search(pattern_dir, dir_name)
     if search_pattern:
-        print('ok')
         dir_path = os.path.join(os.getcwd(), dir_name)
-            try:
-                os.chdir(dir_path)
-                fullpath = os.getcwd()
+        try:
+            os.chdir(dir_path)
+            print('вы в директории {}'.format(dir_path))
+        except FileNotFoundError:
+            print('директории {} не существует'.format(dir_path))
+        except OSError:
+            print('Синтаксическая ошибка в имени файла, имени папки или метке тома')
     else:
-        print('not ok')
+        dir_path = os.path.join(os.getcwd(), dir_name)
+        try:
+            os.chdir(dir_path)
+            print('вы в директории {}'.format(dir_path))
+        except FileNotFoundError:
+            print('директории {} не существует'.format(dir_path))
+        except OSError:
+            print('Синтаксическая ошибка в имени файла, имени папки или метке тома')
+
+def list_dir():
+    print(os.getcwd())
 
 
 def make_dir():
@@ -96,7 +116,8 @@ do = {
     "ping": ping,
     "cp": copy_file,
     "rm": remove_file,
-    "cd": change_dir
+    "cd": change_dir,
+    "ls": list_dir
 }
 
 try:
